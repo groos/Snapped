@@ -47,14 +47,19 @@ auth = Auth(db)
 service = Service()
 plugins = PluginManager()
 
+##--add extra fields for auth table
+auth.settings.extra_fields['auth_user'] = [
+    Field('org_name')
+]
+
 ## create all tables needed by auth if not custom tables
 auth.define_tables(username=False, signature=False)
 
 ## configure email
 mail = auth.settings.mailer
 mail.settings.server = 'logging' if request.is_local else 'smtp.gmail.com:587'
-mail.settings.sender = 'you@gmail.com'
-mail.settings.login = 'username:password'
+mail.settings.sender = 'ntgroos@gmail.com'
+mail.settings.login = None #'username:password'
 
 ## configure auth policy
 auth.settings.registration_requires_verification = False
@@ -63,8 +68,8 @@ auth.settings.reset_password_requires_verification = True
 
 ## if you need to use OpenID, Facebook, MySpace, Twitter, Linkedin, etc.
 ## register with janrain.com, write your domain:api_key in private/janrain.key
-from gluon.contrib.login_methods.janrain_account import use_janrain
-use_janrain(auth, filename='private/janrain.key')
+# from gluon.contrib.login_methods.janrain_account import use_janrain
+# use_janrain(auth, filename='private/janrain.key')
 
 #########################################################################
 ## Define your tables below (or better in another model file) for example
@@ -85,3 +90,7 @@ use_janrain(auth, filename='private/janrain.key')
 
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
+
+def exception(message):
+    session.flash = message
+    redirect(URL('default', 'error'))
