@@ -22,18 +22,6 @@ if db(db.auth_user).isempty():
 '''
 
 
-db.define_table('organization',
-                Field('Name', requires=NE),
-                Field('Description'),
-                Field('Homepage', default=URL('Snapped', 'default', 'index')
-)
-
-db.define_table('website',
-                Field('URL', requires=NE),
-                Field('entered_by', 'reference auth_user'),
-                Field('org', 'reference organization')
-)
-
 def get_websites(user_id=auth.user_id, org_id=None):
                 query = (db.website.entered_by == user_id)
                 

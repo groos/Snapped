@@ -10,6 +10,8 @@ def index():
 
 def add():
     
-    grid=SQLFORM.smartgrid(db.website, linked_tables=['theme'])
+    grid=SQLFORM.smartgrid(db.website)
     
     return dict(grid=grid)
+
+

@@ -9,6 +9,8 @@
 ## be redirected to HTTPS, uncomment the line below:
 # request.requires_https()
 
+NE = IS_NOT_EMPTY()
+
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
     db = DAL('sqlite://storage.sqlite',pool_size=1,check_reserved=['all'])
@@ -94,3 +96,18 @@ auth.settings.reset_password_requires_verification = True
 def exception(message):
     session.flash = message
     redirect(URL('default', 'error'))
+
+
+db.define_table('organization',
+                Field('Name', requires=NE),
+                Field('Description'),
+                Field('Homepage', default=URL('Snapped', 'default', 'index')),
+redefine=True
+)
+
+db.define_table('website',
+                Field('URL', requires=NE),
+                Field('entered_by', 'reference auth_user'),
+                Field('org', 'reference organization'),
+redefine=True
+)
